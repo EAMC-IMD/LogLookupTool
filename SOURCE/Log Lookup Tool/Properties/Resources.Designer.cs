@@ -71,7 +71,7 @@ namespace Log_Lookup_Tool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to EAMC IMD,EAMC_SA_SEC,EAMC Tier1 Admins,EAMC Tier2 Admins,EAMC DENTAC Admins,EAMC DENTAC IMD.
+        ///   Looks up a localized string similar to List of AD security groups permitted to launch this application.
         /// </summary>
         internal static string allowedGroups {
             get {
@@ -90,7 +90,7 @@ namespace Log_Lookup_Tool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data Source=EAMCDB400418;Initial Catalog=EUDLogging;Integrated Security=True;Connect Timeout=60.
+        ///   Looks up a localized string similar to Data Source=YOURSQLSERVERHOSTNAME;Initial Catalog=EUDLogging;Integrated Security=True;Connect Timeout=60.
         /// </summary>
         internal static string ConnectionString {
             get {
@@ -108,7 +108,7 @@ namespace Log_Lookup_Tool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to \\eamcfs01\dept$\_EAMC_DATA\Workgroup\IMD\System Administration\_AdminApps\EAMC Log Lookup Tool\Data Files\DeptCodes.csv.
+        ///   Looks up a localized string similar to Network UNC path in case program is not launched from expected location.
         /// </summary>
         internal static string FallBackScooterPath {
             get {
@@ -117,16 +117,7 @@ namespace Log_Lookup_Tool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream Jeopardy_Music {
-            get {
-                return ResourceManager.GetStream("Jeopardy_Music", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to LDAP://OU=EAMC,OU=DoD,DC=med,DC=ds,DC=osd,DC=mil.
+        ///   Looks up a localized string similar to The LDAP path of your site root.
         /// </summary>
         internal static string LDAPRoot {
             get {
@@ -135,7 +126,7 @@ namespace Log_Lookup_Tool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to LDAP://OU=Workstations,OU=EAMC,OU=DoD,DC=med,DC=ds,DC=osd,DC=mil.
+        ///   Looks up a localized string similar to The LDAP path of your site&apos;s Workstations OU.
         /// </summary>
         internal static string LDAPWorkstation {
             get {
@@ -154,7 +145,7 @@ namespace Log_Lookup_Tool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to EAMC Tier1 Admins,EAMC Tier2 Admins,EAMC Transitional Tier3 Admins.
+        ///   Looks up a localized string similar to List of AD security groups permitted to do administrative AD actions (like disable or delete object).
         /// </summary>
         internal static string OUGroups {
             get {
@@ -193,7 +184,7 @@ namespace Log_Lookup_Tool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to EAMC.
+        ///   Looks up a localized string similar to 4-5 char site code.
         /// </summary>
         internal static string SiteCode {
             get {
@@ -202,7 +193,7 @@ namespace Log_Lookup_Tool.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to YOURSQLSERVERHOSTNAME.
         /// </summary>
         internal static string SQLServer {
             get {
