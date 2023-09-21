@@ -16,7 +16,6 @@ namespace Log_Lookup_Tool
     public partial class frmMain : Form
     {
         private int flashCount = 0;
-        readonly System.Media.SoundPlayer sound = new System.Media.SoundPlayer(Properties.Resources.Jeopardy_Music);
         public frmMain()
         {
             InitializeComponent();
@@ -72,11 +71,9 @@ namespace Log_Lookup_Tool
                     }
                 }
                 if (!fileError) {
-                    sound.Play();
                     MessageBox.Show("One moment while the file is saved");
                     Program.eventLog.WriteEntry("Full hardware list export", System.Diagnostics.EventLogEntryType.Information, 4101);
                     this.vwHardwareListTableAdapter.GetData().ExportToExcel(sfd.FileName);
-                    sound.Stop();
                     MessageBox.Show("Export complete!");
                 } else {
                     MessageBox.Show("One moment while the sheet is generated.");
