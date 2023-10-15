@@ -144,8 +144,8 @@ namespace Log_Lookup_Tool {
             if (MessageBox.Show(message,"Confirmation",MessageBoxButtons.YesNo) == DialogResult.Yes) {
                 string query = @"INSERT INTO Custody (SerialNumber, DoDID, FullScan, Received, ReceivedBy) VALUES (@sn, @dodid, @cac, @received, @tech)";
                 SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                    ["Server"] = settings.SQLServer,
-                    ["Initial Catalog"] = settings.Database,
+                    ["Server"] = Program.settings.SQLServer,
+                    ["Initial Catalog"] = Program.settings.Database,
                     ["Integrated Security"] = true
                 };
                 using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString())) {
@@ -165,7 +165,7 @@ namespace Log_Lookup_Tool {
                         if (cacdata != null && cacdata.ScanResult == ScanStatus.Success) {
                             sqlCommand.Parameters["@cac"].Value = _Barcode;
                         } else {
-                            DirectoryEntry rootDSE = new DirectoryEntry(settings.LDAPRoot);
+                            DirectoryEntry rootDSE = new DirectoryEntry(Program.settings.LDAPRoot);
                             var defaultNamingContext = rootDSE.Properties["defaultNamingContext"].Value;
                             using (DirectorySearcher directorySearcher = new DirectorySearcher(@"LDAP://" + defaultNamingContext)) {
                                 directorySearcher.Filter = $"(userprincipalname={_DoDID}*)";

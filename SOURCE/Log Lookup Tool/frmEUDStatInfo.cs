@@ -31,8 +31,8 @@ namespace Log_Lookup_Tool {
             string sql;
             StringBuilder result = new StringBuilder();
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = settings.SQLServer,
-                ["Initial Catalog"] = settings.Database,
+                ["Server"] = Program.settings.SQLServer,
+                ["Initial Catalog"] = Program.settings.Database,
                 ["Integrated Security"] = true
             };
             SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString());

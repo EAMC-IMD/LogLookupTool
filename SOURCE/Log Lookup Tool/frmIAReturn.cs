@@ -143,8 +143,8 @@ namespace Log_Lookup_Tool {
                 return;
             string query = @"dbo.iAccessReturn";
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = settings.SQLServer,
-                ["Initial Catalog"] = settings.Database,
+                ["Server"] = Program.settings.SQLServer,
+                ["Initial Catalog"] = Program.settings.Database,
                 ["Integrated Security"] = true
             };
             using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString())) {
@@ -181,8 +181,8 @@ namespace Log_Lookup_Tool {
         private void SetLost(int currentRow, int lostVal) {
             string query = @"UPDATE iaccess_badges SET badge_status=@lossval WHERE badge_id=@id";
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = settings.SQLServer,
-                ["Initial Catalog"] = settings.Database,
+                ["Server"] = Program.settings.SQLServer,
+                ["Initial Catalog"] = Program.settings.Database,
                 ["Integrated Security"] = true
             };
             using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString())) {
