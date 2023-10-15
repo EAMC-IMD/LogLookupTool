@@ -99,8 +99,8 @@ namespace Log_Lookup_Tool
                         ) VLAN_Desc
                         ";
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = Properties.Resources.SQLServer,
-                ["Initial Catalog"] = Properties.Resources.Database,
+                ["Server"] = Program.settings.SQLServer,
+                ["Initial Catalog"] = Program.settings.Database,
                 ["Integrated Security"] = true
             };
             SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString());

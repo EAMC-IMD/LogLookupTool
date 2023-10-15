@@ -121,12 +121,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DENTACDesc.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DENTACDesc.Designer.cs">
-      <DependentUpon>DENTACDesc.cs</DependentUpon>
-    </Compile>
     <Compile Include="EUDCustody.cs">
       <DependentUpon>EUDCustody.xsd</DependentUpon>
     </Compile>
@@ -240,9 +234,6 @@
       <DependentUpon>TextRequest.cs</DependentUpon>
     </Compile>
     <Compile Include="WinAPI.cs" />
-    <EmbeddedResource Include="DENTACDesc.resx">
-      <DependentUpon>DENTACDesc.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmAcceptCustody.resx">
       <DependentUpon>frmAcceptCustody.cs</DependentUpon>
     </EmbeddedResource>
@@ -287,14 +278,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="TextRequest.resx">
       <DependentUpon>TextRequest.cs</DependentUpon>
     </EmbeddedResource>

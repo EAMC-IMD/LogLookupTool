@@ -11,6 +11,7 @@ using System.Text;
 
 namespace Log_Lookup_Tool {
     public partial class frmComputerSearch : Form {
+        private static readonly Properties.Settings settings = Properties.Settings.Default;
 
         string preLoad = null;
         private string selectedHostname = null;
@@ -35,8 +36,8 @@ namespace Log_Lookup_Tool {
             if (Regex.IsMatch(Query, @"\d?\d{5}$")) {
                 sql = @"SELECT [dbo].SNfromECN(@ecn) AS hostname";
                 SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                    ["Server"] = Properties.Resources.SQLServer,
-                    ["Initial Catalog"] = Properties.Resources.Database,
+                    ["Server"] = settings.SQLServer,
+                    ["Initial Catalog"] = settings.Database,
                     ["Integrated Security"] = true
                 };
                 SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString());
@@ -73,8 +74,8 @@ namespace Log_Lookup_Tool {
             } else {
                 sql = @"SELECT computername FROM EUDStatData WHERE SerialNumber LIKE '%'+@SN";
                 SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                    ["Server"] = Properties.Resources.SQLServer,
-                    ["Initial Catalog"] = Properties.Resources.Database,
+                    ["Server"] = settings.SQLServer,
+                    ["Initial Catalog"] = settings.Database,
                     ["Integrated Security"] = true
                 };
                 SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString());
@@ -163,7 +164,7 @@ namespace Log_Lookup_Tool {
             } else {
                 selectedHostname = query;
                 DirectorySearcher search = new DirectorySearcher {
-                    SearchRoot = new DirectoryEntry(Properties.Resources.LDAPRoot)
+                    SearchRoot = new DirectoryEntry(settings.LDAPRoot)
                 };
                 search.PropertiesToLoad.Add("name");
                 search.PropertiesToLoad.Add("description");

@@ -70,11 +70,11 @@ namespace Log_Lookup_Tool {
         private void dgvResults_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) {
             if (e.ColumnIndex == dgvResults.Columns["CustomerName"].Index) {
                 if (dgvResults.Rows[e.RowIndex].Cells["FullScan"].Value != DBNull.Value && dgvResults.Rows[e.RowIndex].Cells["FullScan"].Value != null) {
-                    Scan scan = new Scan(dgvResults.Rows[e.RowIndex].Cells["FullScan"].Value.ToString(), true);
+                    Scan scan = new Scan(dgvResults.Rows[e.RowIndex].Cells["FullScan"].Value.ToString());
                     dgvResults.Rows[e.RowIndex].Cells["CustomerName"].Value = $"{scan.Surname}, {scan.FirstName}";
                 } else if (dgvResults.Rows[e.RowIndex].Cells["DoDID"].Value != DBNull.Value && dgvResults.Rows[e.RowIndex].Cells["DoDID"].Value != null) {
                     string dodid = dgvResults.Rows[e.RowIndex].Cells["DoDID"].Value.ToString();
-                    DirectoryEntry rootDSE = new DirectoryEntry(Properties.Resources.LDAPRoot);
+                    DirectoryEntry rootDSE = new DirectoryEntry(Program.settings.LDAPRoot);
                     var defaultNamingContext = rootDSE.Properties["defaultNamingContext"].Value;
                     using (DirectorySearcher directorySearcher = new DirectorySearcher(@"LDAP://" + defaultNamingContext)) {
                         directorySearcher.Filter = $"(userprincipalname={dodid}*)";
@@ -96,11 +96,11 @@ namespace Log_Lookup_Tool {
             }
             if (e.ColumnIndex == dgvResults.Columns["PickupName"].Index) {
                 if (dgvResults.Rows[e.RowIndex].Cells["PickupFullScan"].Value != DBNull.Value && dgvResults.Rows[e.RowIndex].Cells["PickupFullScan"].Value != null) {
-                    Scan scan = new Scan(dgvResults.Rows[e.RowIndex].Cells["PickupFullScan"].Value.ToString(), true);
+                    Scan scan = new Scan(dgvResults.Rows[e.RowIndex].Cells["PickupFullScan"].Value.ToString());
                     dgvResults.Rows[e.RowIndex].Cells["PickupName"].Value = $"{scan.Surname}, {scan.FirstName}";
                 } else if (dgvResults.Rows[e.RowIndex].Cells["PickupDoDID"].Value != DBNull.Value && dgvResults.Rows[e.RowIndex].Cells["PickupDoDID"].Value != null) {
                     string dodid = dgvResults.Rows[e.RowIndex].Cells["PickupDoDID"].Value.ToString();
-                    DirectoryEntry rootDSE = new DirectoryEntry(Properties.Resources.LDAPRoot);
+                    DirectoryEntry rootDSE = new DirectoryEntry(Program.settings.LDAPRoot);
                     var defaultNamingContext = rootDSE.Properties["defaultNamingContext"].Value;
                     using (DirectorySearcher directorySearcher = new DirectorySearcher(@"LDAP://" + defaultNamingContext)) {
                         directorySearcher.Filter = $"(userprincipalname={dodid}*)";
@@ -189,8 +189,8 @@ namespace Log_Lookup_Tool {
                 return;
             string query = @"UPDATE Custody SET Returned=@returned, ReturnedBy=@tech, PickupDoDID=@pickupedipi, PickupFullScan=@pickupfullscan WHERE CustodyID=@id";
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = Properties.Resources.SQLServer,
-                ["Initial Catalog"] = Properties.Resources.Database,
+                ["Server"] = Program.settings.SQLServer,
+                ["Initial Catalog"] = Program.settings.Database,
                 ["Integrated Security"] = true
             };
             using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString())) {
@@ -280,8 +280,8 @@ namespace Log_Lookup_Tool {
                 return;
             string query = @"UPDATE Custody SET Returned=@returned, ReturnedBy=@tech, PickupDoDID=@pickupedipi, PickupFullScan=@pickupfullscan WHERE CustodyID=@id";
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = Properties.Resources.SQLServer,
-                ["Initial Catalog"] = Properties.Resources.Database,
+                ["Server"] = Program.settings.SQLServer,
+                ["Initial Catalog"] = Program.settings.Database,
                 ["Integrated Security"] = true
             };
             using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString())) {
@@ -300,7 +300,7 @@ namespace Log_Lookup_Tool {
                     sqlCommand.Parameters["@tech"].Value = Environment.UserName;
                     sqlCommand.Parameters["@pickupedipi"].Value = _PickupEDIPI;
                     if (_PickupFullScan is null) {
-                        DirectoryEntry rootDSE = new DirectoryEntry(Properties.Resources.LDAPRoot);
+                        DirectoryEntry rootDSE = new DirectoryEntry(Program.settings.LDAPRoot);
                         var defaultNamingContext = rootDSE.Properties["defaultNamingContext"].Value;
                         using (DirectorySearcher directorySearcher = new DirectorySearcher(@"LDAP://" + defaultNamingContext)) {
                             directorySearcher.Filter = $"(userprincipalname={_PickupEDIPI}*)";

@@ -26,8 +26,8 @@ namespace Log_Lookup_Tool {
             }
             string query = @"SELECT COUNT(badge_id) FROM iaccess_badges WHERE badge_serial=@checkval";
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = Properties.Resources.SQLServer,
-                ["Initial Catalog"] = Properties.Resources.Database,
+                ["Server"] = settings.SQLServer,
+                ["Initial Catalog"] = settings.Database,
                 ["Integrated Security"] = true
             };
             using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString())) {

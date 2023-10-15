@@ -8,11 +8,12 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Log_Lookup_Tool
 {
-    static class Program
-    {
+    static class Program {
+        public static readonly Properties.Settings settings = Properties.Settings.Default;
         private static readonly Object _lock = new object();
         private static Assembly MainAssembly { get; set; }
         static ConcurrentDictionary<string, Assembly> LoadedAssemblies { get; } = new ConcurrentDictionary<string, Assembly>();
@@ -34,8 +35,8 @@ namespace Log_Lookup_Tool
 
         public static System.Collections.Generic.Dictionary<int, string> ScooterCodes = new System.Collections.Generic.Dictionary<int, string>();
 
-        private static readonly string[] allowedGroups = Properties.Resources.allowedGroups.Split(',');
-        private static readonly string[] OUGroups = Properties.Resources.OUGroups.Split(',');
+        private static readonly string[] allowedGroups = settings.allowedGroups.Split(',');
+        private static readonly string[] OUGroups = settings.OUGroups.Split(',');
         public static void GroupCheck() {
             IsAllowed = false;
             IsAdmin = false;
@@ -127,13 +128,13 @@ namespace Log_Lookup_Tool
                 eventLog.WriteEntry("Log Lookup Tool exit.", EventLogEntryType.Information, 5005);
                 Environment.Exit(1);
             }
-            System.Net.IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(Properties.Resources.SQLServer);
+            System.Net.IPHostEntry hostEntry = System.Net.Dns.GetHostEntry(settings.SQLServer);
             if (hostEntry.AddressList.Length > 0) {
                 ResolvedDBIP = hostEntry.AddressList[0].ToString();
             }
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = Properties.Resources.SQLServer,
-                ["Initial Catalog"] = Properties.Resources.Database,
+                ["Server"] = settings.SQLServer,
+                ["Initial Catalog"] = settings.Database,
                 ["Integrated Security"] = true
             };
             using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString())) {

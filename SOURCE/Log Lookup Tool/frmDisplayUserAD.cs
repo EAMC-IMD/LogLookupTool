@@ -11,6 +11,7 @@ using System.Windows.Forms;
 
 namespace Log_Lookup_Tool {
     public partial class frmDisplayUserAD : Form {
+        private static readonly Properties.Settings settings = Properties.Settings.Default;
         private string query;
         private QueryTypes queryType;
         public void SetValues(QueryTypes QueryType, string Username) {
@@ -48,7 +49,7 @@ namespace Log_Lookup_Tool {
         }
 
         private static readonly string DefaultScooterCodePath = $"{Program.CurrentPath}\\Data Files\\DeptCodes.csv";
-        private static readonly string FallbackScooterCodePath = Properties.Resources.FallBackScooterPath;
+        private static readonly string FallbackScooterCodePath = settings.FallBackScooterPath;
 
         private string ConvertDeptCodeToString(object DeptCode) {
             if (DeptCode is null)
@@ -69,7 +70,7 @@ namespace Log_Lookup_Tool {
 
         private StringBuilder GetUserData() {
             DirectorySearcher search = new DirectorySearcher {
-                SearchRoot = new DirectoryEntry(Properties.Resources.LDAPRoot)
+                SearchRoot = new DirectoryEntry(settings.LDAPRoot)
             };
             search.PropertiesToLoad.Add("displayname");
             search.PropertiesToLoad.Add("distinguishedname");
@@ -131,7 +132,7 @@ namespace Log_Lookup_Tool {
 
         private StringBuilder GetComputerData() {
             DirectorySearcher search = new DirectorySearcher {
-                SearchRoot = new DirectoryEntry(Properties.Resources.LDAPWorkstation)
+                SearchRoot = new DirectoryEntry(settings.LDAPWorkstation)
             };
             search.PropertiesToLoad.Add("name");
             search.PropertiesToLoad.Add("dnshostname");

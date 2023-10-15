@@ -39,8 +39,8 @@ namespace Log_Lookup_Tool
                     throw new ArgumentOutOfRangeException("Invalid query type.");
             }
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder {
-                ["Server"] = Properties.Resources.SQLServer,
-                ["Initial Catalog"] = Properties.Resources.Database,
+                ["Server"] = Program.settings.SQLServer,
+                ["Initial Catalog"] = Program.settings.Database,
                 ["Integrated Security"] = true
             };
             using (SqlConnection sqlConnection = new SqlConnection(sqlConnectionString.ToString())) {
@@ -87,7 +87,7 @@ namespace Log_Lookup_Tool
             }
 
             DirectorySearcher search = new DirectorySearcher {
-                SearchRoot = new DirectoryEntry(Properties.Resources.LDAPRoot)
+                SearchRoot = new DirectoryEntry(Program.settings.LDAPRoot)
             };
             search.PropertiesToLoad.Add("displayname");
             search.PropertiesToLoad.Add("samaccountname");

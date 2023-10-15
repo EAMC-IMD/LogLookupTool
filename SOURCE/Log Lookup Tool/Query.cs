@@ -25,7 +25,7 @@ namespace Log_Lookup_Tool {
                     return QueryTypes.Name;
                 case var Val when new Regex(@"^.*@mil").IsMatch(Val):
                     return QueryTypes.UPN;
-                case var Val when new Regex($@"{Properties.Resources.SiteCode}.*").IsMatch(Val):
+                case var Val when new Regex($@"{Program.settings.SiteCode}.*").IsMatch(Val):
                     return QueryTypes.Hostname;
                 case var Val when new Regex(@"(?!.*@)(?:^\d{10}\d{0,6}$)").IsMatch(Val):
                     return QueryTypes.DoDID;

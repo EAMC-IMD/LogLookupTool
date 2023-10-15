@@ -175,7 +175,7 @@
             // 
             // btnIPLookup
             // 
-            this.btnIPLookup.Image = global::Log_Lookup_Tool.Properties.Resources.SearchProperty_16x;
+            this.btnIPLookup.Image = global::Log_Lookup_Tool.Properties.Settings.Default.SearchProperty_16x;
             this.btnIPLookup.Location = new System.Drawing.Point(273, 2);
             this.btnIPLookup.Name = "btnIPLookup";
             this.btnIPLookup.Size = new System.Drawing.Size(32, 23);
@@ -301,7 +301,7 @@
             // 
             // btnElevate
             // 
-            this.btnElevate.Image = global::Log_Lookup_Tool.Properties.Resources.AccountGroup_16x;
+            this.btnElevate.Image = global::Log_Lookup_Tool.Properties.Settings.Default.AccountGroup_16x;
             this.btnElevate.Location = new System.Drawing.Point(333, 7);
             this.btnElevate.Name = "btnElevate";
             this.btnElevate.Size = new System.Drawing.Size(28, 23);

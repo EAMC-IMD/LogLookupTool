@@ -3453,7 +3453,7 @@ namespace Log_Lookup_Tool.EUDLoggingDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Resources.ConnectionString;
+            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3713,7 +3713,7 @@ namespace Log_Lookup_Tool.EUDLoggingDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Resources.ConnectionString;
+            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3942,7 +3942,7 @@ ORDER BY applicationname";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Resources.ConnectionString;
+            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4118,7 +4118,7 @@ ORDER BY applicationname";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Resources.ConnectionString;
+            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4305,7 +4305,7 @@ ORDER BY applicationname";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Resources.ConnectionString;
+            this._connection.ConnectionString = global::Log_Lookup_Tool.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

@@ -35,12 +35,12 @@ namespace Log_Lookup_Tool {
                 needsADLookup = true;
             if (!needsADLookup && String.IsNullOrEmpty((string)dataGridView.Rows[e.RowIndex].Cells["fullScanDataGridViewTextBoxColumn"].Value))
                 needsADLookup = true;
-            Scan scan = new Scan(dataGridView.Rows[e.RowIndex].Cells["fullScanDataGridViewTextBoxColumn"].Value.ToString(), true);
+            Scan scan = new Scan(dataGridView.Rows[e.RowIndex].Cells["fullScanDataGridViewTextBoxColumn"].Value.ToString());
             if (scan.Surname is null)
                 needsADLookup = true;
             if (needsADLookup) {
                 string dodid = dataGridView.Rows[e.RowIndex].Cells["DoDID"].Value.ToString();
-                DirectoryEntry rootDSE = new DirectoryEntry(Properties.Resources.LDAPRoot);
+                DirectoryEntry rootDSE = new DirectoryEntry(Program.settings.LDAPRoot);
                 var defaultNamingContext = rootDSE.Properties["defaultNamingContext"].Value;
                 using (DirectorySearcher directorySearcher = new DirectorySearcher(@"LDAP://" + defaultNamingContext)) {
                     directorySearcher.Filter = $"(userprincipalname={dodid}*)";
