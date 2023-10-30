@@ -174,7 +174,7 @@ namespace Log_Lookup_Tool {
                 if (Program.ScooterCodes.Count == 0) {
                     try {
                         string target = DefaultScooterCodePath;
-                        if (System.Text.RegularExpressions.Regex.IsMatch(DefaultScooterCodePath, @"C:\\{1,2}Users")) {
+                        if (!System.IO.File.Exists(DefaultScooterCodePath)) {
                             target = FallbackScooterCodePath;
                         }
                         using (System.IO.StreamReader reader = new System.IO.StreamReader(target)) {
