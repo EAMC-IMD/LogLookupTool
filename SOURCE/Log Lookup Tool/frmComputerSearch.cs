@@ -277,12 +277,17 @@ namespace Log_Lookup_Tool {
             if (Program.IsAdmin) {
                 enableObjectToolStripMenuItem.Enabled = true;
                 deleteObjectToolStripMenuItem.Enabled = true;
+                decommissionObjectToolStripMenuItem.Enabled = true;
+                nukeGroupPolicyToolStripMenuItem.Enabled = true;
             }
-            if (IsEnabled()) {
-                enableObjectToolStripMenuItem.Text = "Disable Object";
-            } else {
-                enableObjectToolStripMenuItem.Text = "Enable Object";
+            if (Program.IsAdmin && Program.IsDentac) {
+                dENTACPostImageToolStripMenuItem.Visible = true;
+                dENTACDecommToolStripMenuItem.Visible = true;
+                dCVRemediateToolStripMenuItem.Visible = true;
             }
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("VisualStudioEdition")))
+                decommissionObjectToolStripMenuItem.Enabled = true;
+            enableObjectToolStripMenuItem.Text = IsEnabled() ? "Disable Object" : "Enable Object";
             e.ContextMenuStrip = contextMenuStrip1;
         }
 
@@ -344,6 +349,160 @@ namespace Log_Lookup_Tool {
             } catch {
                 ((DirectoryEntry)computer.GetUnderlyingObject()).DeleteTree();
             } 
+        }
+        private void dENTACPostImageToolStripMenuItem_Click(object sender, EventArgs e) {
+            PrincipalContext context = new PrincipalContext(ContextType.Domain, "MHS");
+            ComputerPrincipalEx computer = ComputerPrincipalEx.FindByIdentity(context, _selectedHostname);
+            string currentDescription = computer.Description;
+            DENTACDesc dENTACDesc = new DENTACDesc() {
+                Description = currentDescription
+            };
+            dENTACDesc.ShowDialog();
+            string newDesc = dENTACDesc.Description;
+            dENTACDesc.Dispose();
+            StringBuilder results = new StringBuilder();
+            try {
+                string targetDesktop = $@"\\{_selectedHostname}\c$\Users\Public\Desktop\";
+                string[] cdaShortcuts = Directory.GetFiles(targetDesktop, "CDA*.url");
+                foreach (string shortcut in cdaShortcuts) {
+                    File.Delete(shortcut);
+                }
+                if (File.Exists($@"{targetDesktop}\CDA.lnk")) 
+                    File.Delete($@"{targetDesktop}\CDA.lnk");
+                foreach (string url in Directory.GetFiles(@"\\eamca700500\a$\1 Software\1 Imaging\2 Shortcuts for Desktops\", "*.url")) {
+                    string targetFile = Path.Combine(targetDesktop, Path.GetFileName(url));
+                    File.Copy(url, targetFile, true);
+                }
+                File.Copy(@"\\eamca700500\a$\1 Software\1 Imaging\2 Shortcuts for Desktops\XV.lnk", targetDesktop + "XV.lnk", true);
+                File.Copy(@"\\eamca700500\a$\1 Software\1 Imaging\Select-DefaultPrinter.exe", $@"\\{_selectedHostname}\c$\AdminTools\Select-DefaultPrinter.exe", true);
+                results.AppendLine("Desktop set.");
+            } catch (UnauthorizedAccessException) {
+                results.AppendLine("Could not set Desktop - insufficient access.");
+            } catch (IOException) {
+                results.AppendLine("Could not set Desktop - target offline");
+            }
+            try {
+                if (newDesc == "")
+                    newDesc = null;
+                computer.Description = newDesc;
+                computer.Save();
+                results.AppendLine("Target AD object description set.");
+            } catch {
+                results.AppendLine("Could not update target description in AD.");
+            }
+            Regex regexMain = new Regex(@"(?<target>OU=(Desktops|Laptops),OU=(Clinical|Admin))");
+            Regex regexDead = new Regex(@"OU=Dead Computers");
+            Match matchMain = regexMain.Match(computer.DistinguishedName);
+            Match matchDead = regexDead.Match(computer.DistinguishedName);
+            bool cantMove = false;
+            DirectoryEntry targetLoc = new DirectoryEntry();
+            if (matchMain.Success) {
+                try {
+                    targetLoc = new DirectoryEntry(@"LDAP://" + matchMain.Groups["target"].Value + @",OU=DENTAC,OU=Dental,OU=Windows10,OU=Workstations,OU=EAMC,OU=DoD,DC=med,DC=ds,DC=osd,DC=mil");
+                    DirectoryEntry currentObject = (DirectoryEntry)computer.GetUnderlyingObject();
+                    currentObject.MoveTo(targetLoc);
+                    currentObject.Close();
+                    results.AppendLine("Target AD object moved to DENTAC OU.");
+                } catch {
+                    results.AppendLine("Could not move target AD object.");
+                }
+            } else if (matchDead.Success) {
+                switch (computer.Name.Substring(4, 2)) {
+                    case "NB":
+                        targetLoc = new DirectoryEntry(@"LDAP://Laptops,OU=Clinical,OU=DENTAC,OU=Dental,OU=Windows10,OU=Workstations,OU=EAMC,OU=DoD,DC=med,DC=ds,DC=osd,DC=mil");
+                        break;
+                    case "WK":
+                        targetLoc = new DirectoryEntry(@"LDAP://Desktops,OU=Clinical,OU=DENTAC,OU=Dental,OU=Windows10,OU=Workstations,OU=EAMC,OU=DoD,DC=med,DC=ds,DC=osd,DC=mil");
+                        break;
+                    default:
+                        cantMove = true;
+                        break;
+                }
+                if (!cantMove) {
+                    try {
+                        DirectoryEntry currentObject = (DirectoryEntry)computer.GetUnderlyingObject();
+                        currentObject.MoveTo(targetLoc);
+                        currentObject.Close();
+                        computer.Enable();
+                        results.AppendLine("Target AD object moved to DENTAC OU.");
+                    } catch {
+                        results.AppendLine("Could not move target AD object.");
+                    }
+                } else {
+                    results.AppendLine("Computer not moved.  Currently in Dead Computers, could not determine correct target OU");
+                }
+            } else {
+                results.AppendLine("Could not move target to DENTAC OU - does not exist in a supported source");
+            }
+            targetLoc.Close();
+            MessageBox.Show(results.ToString());
+            btnSearch.PerformClick();
+        }
+        private void dENTACDecommToolStripMenuItem_Click(object sender, EventArgs e) {
+            Extensions.DecomComputer(_selectedHostname);
+            string dcvPath = $@"\\{Properties.Resources.DCVServer}\{Properties.Resources.DCVRootFolder}\Configs";
+            string archivePath = $@"\\{Properties.Resources.DCVServer}\{Properties.Resources.DCVRootFolder}\ArchivedConfigs";
+            DirectoryInfo dcvInfo = new DirectoryInfo(dcvPath);
+            foreach (FileInfo config in dcvInfo.GetFiles($"{_selectedHostname}*.*")) {
+                try {
+                    config.MoveTo($@"{archivePath}\{config.Name}");
+                } catch {
+                    try {
+                        config.Delete();
+                    } catch {
+                        MessageBox.Show($"Failed to archive or remove DCV licenses files for {_selectedHostname} at {dcvPath}");
+                    }
+                }
+            }
+            btnSearch.PerformClick();
+        }
+
+        private void decommissionObjectToolStripMenuItem_Click(object sender, EventArgs e) {
+            Extensions.DecomComputer(_selectedHostname);
+        }
+
+        private void dCVRemediateToolStripMenuItem_Click(object sender, EventArgs e) {
+            if (DCVUtil.RemediateConfig(_selectedHostname) == DCVUtil.Result.Success) {
+                System.Media.SystemSounds.Beep.Play();
+            } else {
+                System.Media.SystemSounds.Asterisk.Play();
+            }
+        }
+
+        private void RecursiveDelete(DirectoryInfo baseDir) {
+            if (!baseDir.Exists)
+                return;
+            foreach (var dir in baseDir.EnumerateDirectories()) {
+                RecursiveDelete(dir);
+            }
+
+            try {
+                baseDir.Delete(true);
+            }
+            catch { }
+        }
+
+        private void UpdateGPO() {
+            try {
+                var connectionOptions = new ConnectionOptions {
+                    Impersonation = ImpersonationLevel.Impersonate
+                };
+                var scope = new ManagementScope($@"\\{_selectedHostname}\root\cimv2", connectionOptions);
+                scope.Connect();
+                var managementClass = new ManagementClass(scope, new ManagementPath("Win32_Process"), new ObjectGetOptions());
+                using (var inparams = managementClass.GetMethodParameters("Create")) {
+                    inparams["CommandLine"] = "GPUpdate /force";
+                    _ = managementClass.InvokeMethod("Create", inparams, null);
+                }
+            }
+            catch (Exception ex) { }
+        }
+        private void nukeGroupPolicyToolStripMenuItem_Click(object sender, EventArgs e) {
+            RecursiveDelete(new DirectoryInfo($@"\\{_selectedHostname}\c$\ProgramData\Microsoft\Group Policy\History"));
+            File.Delete($@"\\{_selectedHostname}\c$\Windows\System32\GroupPolicy\Machine\Registry.pol");
+            File.Delete($@"\\{_selectedHostname}\c$\Windows\System32\GroupPolicy\User\Registry.pol");
+            File.Delete($@"\\{_selectedHostname}\c$\Windows\System32\GroupPolicy\gpt.ini");
+            UpdateGPO();
         }
     }
 }
